@@ -358,7 +358,7 @@ display: none;
 
 <div id="exercise-1" class="section level1">
 <h1>Exercise 1</h1>
-<p>My public repository can be found <a href="http://www.https://github.com/n-2935/MY472_Assignment2_Exercise1">here</a>.</p>
+<p>My public repository can be found <a href="https://github.com/n-2935/MY472_Assignment2_Exercise1">here</a>.</p>
 </div>
 <div id="exercise-2" class="section level1">
 <h1>Exercise 2</h1>
@@ -541,6 +541,51 @@ cat(&quot;Original word 1: &quot;, word1, &quot;\n&quot;)</code></pre>
 </div>
 <div id="exercise-3---part-2" class="section level1">
 <h1>Exercise 3 - Part 2</h1>
+<p><strong>Research question</strong></p>
+<p>How often is the weather referenced in the english literary
+canon?</p>
+<p><strong>Concept</strong></p>
+<p>In this exercise we use two books - Moby Dick and Wuthering Heights -
+as proxies for the english literary cano and thus use them to examine
+how often is weather referenced in the western canon books. To measure
+the concept of weather, mentions of weather through words such as
+“rain”, “wind” and “sunny” are accounted for.</p>
+<p><strong>Findings</strong></p>
+<p>The findings show that: Total weather-related terms found in Moby
+Dick: 590 Total weather-related terms found in Wuthering heights:
+277</p>
+<p>This shows that in Mody Dick there a lot of references to the weather
+since approximately 0.28% of the words (590 of 209117) are references to
+the weather.</p>
+<p>It also shows that in Wuthering heights also has a lot of references
+to the weather since approximately 0.23% of the words (277 of 119572
+words) are references to the weather.</p>
+<p>This indicates that weather is oftentimes referenced in these books
+and, with further analysis, we could see if this is the case solely in
+the western canon or in literature in general.</p>
+<p><strong>Code</strong></p>
+<pre><code>## Warning in .recacheSubclasses(def@className, def, env): undefined subclass
+## &quot;pcorMatrix&quot; of class &quot;replValueSp&quot;; definition not updated</code></pre>
+<pre><code>## Warning in .recacheSubclasses(def@className, def, env): undefined subclass
+## &quot;pcorMatrix&quot; of class &quot;xMatrix&quot;; definition not updated</code></pre>
+<pre><code>## Warning in .recacheSubclasses(def@className, def, env): undefined subclass
+## &quot;pcorMatrix&quot; of class &quot;mMatrix&quot;; definition not updated</code></pre>
+<pre><code>## Package version: 3.3.1
+## Unicode version: 14.0
+## ICU version: 71.1</code></pre>
+<pre><code>## Parallel computing: 8 of 8 threads used.</code></pre>
+<pre><code>## See https://quanteda.io for tutorials and examples.</code></pre>
+<pre><code>## Warning in .recacheSubclasses(def@className, def, env): undefined subclass
+## &quot;pcorMatrix&quot; of class &quot;replValueSp&quot;; definition not updated</code></pre>
+<pre><code>## Warning in .recacheSubclasses(def@className, def, env): undefined subclass
+## &quot;pcorMatrix&quot; of class &quot;xMatrix&quot;; definition not updated</code></pre>
+<pre><code>## Warning in .recacheSubclasses(def@className, def, env): undefined subclass
+## &quot;pcorMatrix&quot; of class &quot;mMatrix&quot;; definition not updated</code></pre>
+<pre><code>##            Document Weather_Count
+## 1         Moby Dick             0
+## 2 Wuthering Heights             0</code></pre>
+<pre><code>## Total weather-related terms found in Moby Dick: 590</code></pre>
+<pre><code>## Total weather-related terms found in Wuthering heights: 277</code></pre>
 <div id="appendix-all-code-in-this-assignment" class="section level2">
 <h2>Appendix: All code in this assignment</h2>
 <pre class="r"><code>knitr::opts_chunk$set(echo = FALSE) # Code set out in appendix
@@ -693,6 +738,103 @@ cat(&quot;Modified word 3: &quot;, result3, &quot;\n\n&quot;)
 
 cat(&quot;Original word 4: &quot;, word4, &quot;\n&quot;)
 cat(&quot;Modified word 4: &quot;, result4, &quot;\n&quot;)
+
+# Load quanteda package
+library(&quot;quanteda&quot;)
+library(&quot;quanteda.textstats&quot;)
+
+# Load the texts
+moby_dick &lt;- readLines(&quot;https://www.gutenberg.org/files/2701/2701-0.txt&quot;)
+wuthering_heights &lt;- readLines(&quot;https://www.gutenberg.org/files/768/768-0.txt&quot;)
+combined_texts &lt;- c(moby_dick, wuthering_heights)
+
+# Create a corpus
+corpus &lt;- corpus(combined_texts)
+
+# Create a character vector
+text_vector &lt;- c(&quot;Moby Dick&quot; = paste(moby_dick, collapse = &quot;\n&quot;), &quot;Wuthering Heights&quot; = paste(wuthering_heights, collapse = &quot;\n&quot;))
+
+# Tokenize the text
+tokens_text &lt;- tokens(text_vector)
+
+# Define a dictionary of weather-related terms
+weather_dictionary &lt;- dictionary(list(
+  rain = c(&quot;rain&quot;, &quot;rainy&quot;, &quot;raining&quot;),
+  snow = c(&quot;snow&quot;, &quot;snowy&quot;, &quot;snowing&quot;),
+  storm = c(&quot;storm&quot;, &quot;stormy&quot;, &quot;storming&quot;),
+  sun = c(&quot;sun&quot;, &quot;sunny&quot;),
+  cloud = c(&quot;cloud&quot;, &quot;cloudy&quot;),
+  wind = c(&quot;wind&quot;, &quot;windy&quot;)
+))
+
+# Initialize an empty vector to store the counts
+weather_counts &lt;- c()
+
+# Loop through each document in the tokens and count the occurrences
+for (doc in seq_along(tokens_text)) {
+  counts &lt;- table(tokens_text[[doc]])  # Count the terms in the document
+  weather_counts[doc] &lt;- sum(counts[rownames(weather_dictionary)])  # Sum counts of weather terms
+}
+
+# Create a data frame with document names and weather-related term counts
+weather_counts_df &lt;- data.frame(Document = docnames(tokens_text), Weather_Count = weather_counts)
+
+# Display the counts
+print(weather_counts_df)
+# Load the texts
+moby_dick &lt;- readLines(&quot;https://www.gutenberg.org/files/2701/2701-0.txt&quot;)
+
+# Define a dictionary of weather-related terms
+weather_dictionary &lt;- list(
+  rain = c(&quot;rain&quot;, &quot;rainy&quot;, &quot;raining&quot;),
+  snow = c(&quot;snow&quot;, &quot;snowy&quot;, &quot;snowing&quot;),
+  storm = c(&quot;storm&quot;, &quot;stormy&quot;, &quot;storming&quot;),
+  sun = c(&quot;sun&quot;, &quot;sunny&quot;),
+  cloud = c(&quot;cloud&quot;, &quot;cloudy&quot;),
+  wind = c(&quot;wind&quot;, &quot;windy&quot;)
+)
+
+# Tokenize the text and count weather-related terms
+library(stringr)
+
+# Combine all the weather-related terms into a single vector
+weather_terms &lt;- unlist(weather_dictionary)
+
+# Tokenize the text and count matches
+term_counts &lt;- str_count(tolower(moby_dick), paste(weather_terms, collapse = &quot;|&quot;))
+
+# Calculate the total count
+total_count &lt;- sum(term_counts)
+
+# Print the results
+cat(&quot;Total weather-related terms found in Moby Dick:&quot;, total_count)
+# Load the texts
+wuthering_heights &lt;- readLines(&quot;https://www.gutenberg.org/files/768/768-0.txt&quot;)
+
+# Define a dictionary of weather-related terms
+weather_dictionary &lt;- list(
+  rain = c(&quot;rain&quot;, &quot;rainy&quot;, &quot;raining&quot;),
+  snow = c(&quot;snow&quot;, &quot;snowy&quot;, &quot;snowing&quot;),
+  storm = c(&quot;storm&quot;, &quot;stormy&quot;, &quot;storming&quot;),
+  sun = c(&quot;sun&quot;, &quot;sunny&quot;),
+  cloud = c(&quot;cloud&quot;, &quot;cloudy&quot;),
+  wind = c(&quot;wind&quot;, &quot;windy&quot;)
+)
+
+# Tokenize the text and count weather-related terms
+library(stringr)
+
+# Combine all the weather-related terms into a single vector
+weather_terms &lt;- unlist(weather_dictionary)
+
+# Tokenize the text and count matches
+term_counts &lt;- str_count(tolower(wuthering_heights), paste(weather_terms, collapse = &quot;|&quot;))
+
+# Calculate the total count
+total_count &lt;- sum(term_counts)
+
+# Print the results
+cat(&quot;Total weather-related terms found in Wuthering heights:&quot;, total_count)
 # this chunk generates the complete code appendix. 
 # eval=FALSE tells R not to run (``evaluate&#39;&#39;) the code here (it was already run before).</code></pre>
 </div>
